@@ -24,26 +24,6 @@ class Test_Workshop():
   def teardown_method(self):
     self.driver.quit()
   
-  def readProductListFromExcel():
-    # exceli aç
-    # hücreleri oku 
-    # okuduğun tüm verileri bir listeye at
-    # listeyi return et
-    excelFile = openpyxl.load_workbook("data/productList.xlsx")
-    selectedSheet = excelFile["Sheet1"] # excel dosyasının Sheet1 isimli sayfasını çağırdık 
-
-    rows = selectedSheet.max_row # kaç satır varsa
-    productList = [] # verileri tutacak boş bir liste oluştur
-
-
-    for i in range(2, rows+1): # 2 => 1.satırı başlık olarak görsün diyerek, rows+1 => 0 dan başladığı için son satırı da yazsın diye 
-        productName = selectedSheet.cell(i,2).value  # productName 2.sütundan başlıyor
-        tupleExample = (productName)
-        productList.append(tupleExample)
-    return productList 
-
-
-
   # 1- Normal giriş yapılması
   def test_login(self):
     
@@ -124,6 +104,7 @@ class Test_Workshop():
             pnames.append(productNamesText)
         assert pnames[0] == data[0]
 
+        
   # 4- Ürünlerin z'den a ya sıralanma fonksiyonun test edilmesi
   def test_product_desc_char(self):
     self.test_login()
@@ -139,13 +120,13 @@ class Test_Workshop():
     WebDriverWait(self.driver,5).until(expected_conditions.visibility_of_element_located((By.XPATH, PRODUCT_LIST)))
     product = self.driver.find_elements(By.XPATH, PRODUCT_LIST)
     productListName = self.driver.find_elements(By.XPATH, PRODUCT_NAME) # isimleri listeye at
-    productNameLen = len(product) # product sayısı kadar 
+    productNameLen = len(product)
     
     productList = []
-    for i in range (0, productNameLen): # product sayısı kadar dön
-        product_name = productListName[i] # ürünlerin indis değeri kadar atama yap 
-        productText = product_name.text # prod un text değerini ata
-        productList.append(productText) # ürün listesine prod un text değerini ata
+    for i in range (0, productNameLen): 
+        product_name = productListName[i]  
+        productText = product_name.text 
+        productList.append(productText) 
         productList = sorted(productList, reverse = True)       
         #print(productList)
     return productList
@@ -205,9 +186,6 @@ class Test_Workshop():
         basket = self.driver.find_elements(By.CLASS_NAME,BASKET_LINK)
         pOnBasket = len(basket)
         assert pOnBasket > 0
-
-
-
 
   
   # 7- Sepete eklenen ürünlerin sepet sayfasında doğru bir şekilde görünmesi testi
